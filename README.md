@@ -1,5 +1,11 @@
 # iPhone pickup alert: Apple Barton Creek (Austin, TX)
 
+> **Current setup: runs on the PC, not GitHub.** Apple returns HTTP 541 to GitHub Actions runners, so the
+> workflow is manual-only. A Windows Task Scheduler task ("iPhone Stock Alert") runs `run-check.ps1` every
+> 5 minutes. The ntfy topic lives in `ntfy_topic.txt` (git-ignored), state in local `state.json`, logs in
+> `stock-check.log`. The PC must be on and awake. Remove with `Unregister-ScheduledTask "iPhone Stock Alert"`.
+> The GitHub sections below are kept for reference.
+
 Checks Apple's `fulfillment-messages` endpoint every 5 min via GitHub Actions and pushes to your iPhone (ntfy) when a watched part flips **unavailable -> available**.
 
 ## Layout
