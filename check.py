@@ -185,6 +185,16 @@ def run(cfg, dry=False, fetcher=fetch):
     parts = state.setdefault("parts", {})
     threshold = cfg.get("failure_alert_threshold", 6)  # 6 x 5min = 30min
 
+    # Gap detection: if the PC slept/was off, tell the user checks were missed.
+    last = state.get("last_run")
+    state["last_run"] = now()
+    if last:
+        gap = (datetime.fromisoformat(state["last_run"]) - datetime.fromisoformat(last)).total_seconds() / 60
+        if gap > cfg.get("gap_alert_minutes", 20):
+            notify("Stock checker was offline",
+                   f"No checks for ~{int(gap)} min (PC asleep or off). Stock may have changed meanwhile.",
+                   priority="high", tags="zzz", dry=dry)
+
     try:
         data = fetcher([p["part"] for p in cfg["parts"]], cfg["zip"])
         store, result = parse(data, cfg)
