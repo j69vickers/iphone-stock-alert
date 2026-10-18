@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """Apple pickup-stock alert for one store (default: Barton Creek, Austin TX).
 
 Usage:
@@ -25,7 +25,8 @@ HERE = Path(__file__).parent
 CONFIG_PATH = HERE / "config.json"
 STATE_PATH = HERE / "state.json"
 WARMUP_URL = "https://www.apple.com/shop/buy-iphone/iphone-18-pro"
-UA_PLATFORM = "Windows NT 10.0; Win64; x64"
+HEADED = bool(os.environ.get("HEADED"))  # set in CI; run under xvfb to avoid headless detection
+UA_PLATFORM = "X11; Linux x86_64" if sys.platform.startswith("linux") else "Windows NT 10.0; Win64; x64"
 
 
 class SchemaError(Exception):
@@ -48,9 +49,9 @@ def _browser_fetch(path):
     try:
         with sync_playwright() as p:
             b = p.chromium.launch(
-                channel="chrome", headless=True,
-                ignore_default_args=["--enable-automation", "--headless"],
-                args=["--headless=new", "--disable-blink-features=AutomationControlled"])
+                channel="chrome", headless=not HEADED,
+                ignore_default_args=["--enable-automation"] + ([] if HEADED else ["--headless"]),
+                args=["--disable-blink-features=AutomationControlled"] + ([] if HEADED else ["--headless=new"]))
             try:
                 major = b.version.split(".")[0]
                 ua = (f"Mozilla/5.0 ({UA_PLATFORM}) AppleWebKit/537.36 (KHTML, like Gecko) "

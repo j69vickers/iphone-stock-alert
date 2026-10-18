@@ -31,7 +31,8 @@ jobs:
       - name: Check stock
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
-        run: python check.py
+          HEADED: "1"
+        run: xvfb-run -a python check.py
 
       - name: Persist state
         run: |
