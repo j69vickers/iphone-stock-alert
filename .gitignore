@@ -1,3 +1,6 @@
 __pycache__/
 *.pyc
+ntfy_topic.txt
+stock-check.log
+state.json
 

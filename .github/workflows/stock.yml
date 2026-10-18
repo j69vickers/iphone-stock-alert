@@ -1,9 +1,7 @@
 name: iphone-stock-check
 
 on:
-  schedule:
-    - cron: "*/5 * * * *"   # GitHub may delay runs under load; 5 min is the minimum
-  workflow_dispatch:         # manual "Run workflow" button
+  workflow_dispatch:         # manual only: Apple blocks GitHub IPs, the checker runs on a PC instead
 
 permissions:
   contents: write            # needed to commit state.json

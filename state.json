@@ -1,8 +1,0 @@
-{
-  "_health": {
-    "alerted": false,
-    "fails": 2,
-    "last_error": "fetch: HTTP 541"
-  },
-  "parts": {}
-}
